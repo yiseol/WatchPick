@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>WatchPick - My Page</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/earlyaccess/nanummyeongjo.css" rel="stylesheet">
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const tabs = document.querySelectorAll('.tab-btn');
+        const sections = [
+            document.getElementById('profile'),
+            document.getElementById('my-reviews'),
+            document.getElementById('watched-works'),
+            document.getElementById('settings')
+        ];
+        tabs.forEach((tab, idx) => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                sections.forEach((sec, sidx) => {
+                    sec.style.display = (idx === sidx) ? 'block' : 'none';
+                });
+            });
+        });
+        sections.forEach((sec, idx) => {
+            sec.style.display = idx === 0 ? 'block' : 'none';
+        });
+    });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>WatchPick</h1>
+        <nav class="navbar">
+            <a href="index.html">홈</a>
+            <a href="movie.html">영화·드라마·예능</a>
+            <a href="review.html">리뷰</a>
+            <a href="recommend.html">추천</a>
+            <a href="community.html">커뮤니티</a>
+            <a href="mypage.html" class="active">My Page</a>
+        </nav>
+        <hr>
+    </header>
+    <main>
+        <h2>My Page</h2>
+        <div class="tabs">
+            <button class="tab-btn active" type="button">내 프로필</button>
+            <button class="tab-btn" type="button">내 리뷰/평점</button>
+            <button class="tab-btn" type="button">시청한 작품</button>
+            <button class="tab-btn" type="button">설정</button>
+        </div>
+        <!-- 내 프로필 -->
+        <section class="section-box" id="profile">
+            <h3>내 프로필</h3>
+            <div>
+                <img src="https://via.placeholder.com/80" alt="프로필" style="border-radius:50%;">
+                <p>닉네임: <input type="text" value="홍길동"></p>
+                <p>취향 장르: <input type="text" value="드라마, 판타지"></p>
+            </div>
+        </section>
+        <!-- 내 리뷰/평점 -->
+        <section class="section-box" id="my-reviews">
+            <h3>내 리뷰/평점</h3>
+            <ul>
+                <li>작성한 리뷰, 별점 기록, 추천 받은 리뷰</li>
+            </ul>
+        </section>
+        <!-- 시청한 작품 -->
+        <section class="section-box" id="watched-works">
+            <h3>시청한 작품</h3>
+            <ul>
+                <li>여기에 사용자가 목록보기에서 '시청함'으로 표시한 작품이 나옵니다.</li>
+            </ul>
+        </section>
+        <!-- 설정 -->
+        <section class="section-box" id="settings">
+            <h3>설정</h3>
+            <ul>
+                <li>계정 설정</li>
+                <li>알림 설정</li>
+                <li>구독 정보</li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <hr>
+        <p>&copy; 2025 WatchPick</p>
+    </footer>
+</body>
+</html>

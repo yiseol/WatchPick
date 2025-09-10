@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>WatchPick - 추천</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/earlyaccess/nanummyeongjo.css" rel="stylesheet">
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const tabs = document.querySelectorAll('.tab-btn');
+        const sections = [
+            document.getElementById('personal'),
+            document.getElementById('genre'),
+            document.getElementById('curation')
+        ];
+        tabs.forEach((tab, idx) => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                sections.forEach((sec, sidx) => {
+                    sec.style.display = (idx === sidx) ? 'block' : 'none';
+                });
+            });
+        });
+        sections.forEach((sec, idx) => {
+            sec.style.display = idx === 0 ? 'block' : 'none';
+        });
+    });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>WatchPick</h1>
+        <nav class="navbar">
+            <a href="index.html">홈</a>
+            <a href="movie.html">영화·드라마·예능</a>
+            <a href="review.html">리뷰</a>
+            <a href="recommend.html" class="active">추천</a>
+            <a href="community.html">커뮤니티</a>
+            <a href="mypage.html">마이페이지</a>
+        </nav>
+        <hr>
+    </header>
+    <main>
+        <h2>추천</h2>
+        <div class="tabs">
+            <button class="tab-btn active" type="button">개인 맞춤 추천</button>
+            <button class="tab-btn" type="button">장르별 추천</button>
+            <button class="tab-btn" type="button">큐레이션 추천</button>
+        </div>
+        <!-- 개인 맞춤 추천 -->
+        <section class="section-box" id="personal">
+            <h3>개인 맞춤 추천</h3>
+            <ul>
+                <li>사용자 평점 기반 추천</li>
+                <li>비슷한 취향 유저 추천</li>
+            </ul>
+        </section>
+        <!-- 장르별 추천 -->
+        <section class="section-box" id="genre">
+            <h3>장르별 추천</h3>
+            <ul>
+                <li>영화 장르별 추천</li>
+                <li>드라마 장르별 추천</li>
+                <li>예능 장르별 추천</li>
+            </ul>
+        </section>
+        <!-- 큐레이션 추천 -->
+        <section class="section-box" id="curation">
+            <h3>큐레이션 추천</h3>
+            <ul>
+                <li>필수 시청작</li>
+                <li>숨은 명작</li>
+                <li>오늘 볼 만한 작품</li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <hr>
+        <p>&copy; 2025 WatchPick</p>
+    </footer>
+</body>
+</html>

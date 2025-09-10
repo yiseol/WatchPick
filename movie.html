@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>WatchPick - 영화·드라마·예능</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/earlyaccess/nanummyeongjo.css" rel="stylesheet">
+    <script>
+    // ====== 전역 데이터 ======
+    const COUNTRIES = [
+        "대한민국", "미국", "일본", "영국", "프랑스", "독일", "중국", "홍콩", "인도", "캐나다", "스페인", "러시아", "이탈리아", "호주", "기타"
+        // 실제 서비스에서는 ISO 국가 목록 전체 활용!
+    ];
+    const LANGUAGES = [
+        "한국어", "영어", "일본어", "중국어", "프랑스어", "독일어", "스페인어", "이탈리아어", "히브리어", "기타"
+        // 실제 서비스에서는 ISO 언어코드 전체 활용!
+    ];
+    const OTTS = [
+        "넷플릭스", "티빙", "디즈니+", "애플 TV+", "웨이브", "왓챠", "MBC", "SBS", "KBS", "TVN"
+    ];
+    const KEYWORDS = [
+        "감동","눈물","슬픔","아픔","웃음","코믹","유쾌","재치","설렘","로맨틱","사랑","긴장감","스릴","공포","신비","판타지","꿈","상상",
+        "흥미진진","모험","액션","감성","힐링","잔잔함","강렬함","충격","반전","실화","역사","전기","성장","청춘","학원","가족","우정",
+        "사랑 이야기","범죄","추리","미스터리","전쟁","정치","사회","법정","스포츠","음악","공연","여행","음식","요리","일상","직장",
+        "삶","판타지","초자연","SF","관찰 예능","리얼리티","토크쇼","인터뷰","게임","퀴즈","경쟁","개그","버라이어티","스타","아이돌",
+        "팬덤","명작","숨은 명작","필수 시청","최신","트렌디","인기","오리지널","국내제작","해외제작","가족용","청소년용","성인용"
+    ];
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 탭 전환
+        const tabs = document.querySelectorAll('.tab-btn');
+        const sections = [
+            document.getElementById('register-section'),
+            document.getElementById('list-section')
+        ];
+        tabs.forEach((tab, idx) => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                sections.forEach((sec, sidx) => {
+                    sec.style.display = (idx === sidx) ? 'block' : 'none';
+                });
+            });
+        });
+        sections.forEach((sec, idx) => { sec.style.display = idx === 0 ? 'block' : 'none'; });
+
+        // ====== 등록하기 폼 동적 항목 ======
+        function fillSelect(select, arr, placeholder) {
+            select.innerHTML = "";
+            if (placeholder) {
+                const ph = document.createElement('option');
+                ph.value = "";
+                ph.textContent = placeholder;
+                select.appendChild(ph);
+            }
+            arr.forEach(v => {
+                const o = document.createElement('option');
+                o.value = v; o.textContent = v;
+                select.appendChild(o);
+            });
+        }
+
+        fillSelect(document.getElementById('reg-country'), COUNTRIES, "국가 선택");
+        fillSelect(document.getElementById('reg-language'), LANGUAGES, "언어 선택");
+        fillSelect(document.getElementById('reg-ott'), OTTS, "OTT/방송사 선택");
+
+        // ===== 출연진 동적 추가 =====
+        const castList = document.getElementById('cast-list');
+        const addCastBtn = document.getElementById('add-cast-btn');
+        function addCastInput(value = "") {
+            const row = document.createElement('div');
+            row.className = "cast-row";
+            row.style.display = "flex";
+            row.style.alignItems = "center";
+            row.style.gap = "8px";
+            row.style.marginBottom = "6px";
+            const input = document.createElement('input');
+            input.type = "text"; input.placeholder = "출연진 이름"; input.value = value; input.required = true; input.style.flex = "1";
+            const delBtn = document.createElement('button');
+            delBtn.type = "button"; delBtn.textContent = "삭제"; delBtn.className = "btn"; delBtn.style.padding = "4px 12px";
+            delBtn.style.fontSize = "0.95em"; delBtn.style.marginLeft = "5px";
+            delBtn.addEventListener('click', function() { castList.removeChild(row); });
+            row.appendChild(input); row.appendChild(delBtn); castList.appendChild(row);
+        }
+        addCastInput();
+        addCastBtn.addEventListener('click', function(e) { e.preventDefault(); addCastInput(); });
+
+        // ====== 평점별 (5점 만점, 0.5단위) ======
+        const ratingWrap = document.getElementById('star-rating');
+        let currentRating = 0;
+        function renderStars(val) {
+            ratingWrap.innerHTML = "";
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement("span");
+                star.className = "star";
+                if (val >= i) {
+                    star.innerHTML = "&#9733;"; // full
+                } else if (val >= i - 0.5) {
+                    star.innerHTML = "&#9733;"; // half (for simplicity, use full icon)
+                    star.style.background = "linear-gradient(90deg,#f3c969 50%,#232a43 50%)";
+                    star.style.webkitBackgroundClip = "text";
+                    star.style.webkitTextFillColor = "transparent";
+                } else {
+                    star.innerHTML = "&#9734;"; // empty
+                }
+                star.style.fontSize = "2em";
+                star.style.cursor = "pointer";
+                // 클릭 이벤트(0.5 단위)
+                star.addEventListener('mousemove', e => {
+                    const rect = star.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    let newVal = i - (x < rect.width / 2 ? 0.5 : 0);
+                    renderStars(newVal);
+                });
+                star.addEventListener('mouseleave', () => renderStars(currentRating));
+                star.addEventListener('click', e => {
+                    const rect = star.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    currentRating = i - (x < rect.width / 2 ? 0.5 : 0);
+                    document.getElementById('reg-rating-value').value = currentRating;
+                    renderStars(currentRating);
+                });
+                ratingWrap.appendChild(star);
+            }
+        }
+        renderStars(0);
+
+        // ====== 키워드 다중선택(토글) ======
+        const keywordWrap = document.getElementById('reg-keywords');
+        let selectedKeywords = [];
+        KEYWORDS.forEach(kw => {
+            const span = document.createElement('span');
+            span.className = "tag";
+            span.textContent = kw;
+            span.addEventListener('click', function() {
+                if (selectedKeywords.includes(kw)) {
+                    selectedKeywords = selectedKeywords.filter(k => k !== kw);
+                    span.classList.remove('selected');
+                } else {
+                    selectedKeywords.push(kw);
+                    span.classList.add('selected');
+                }
+                document.getElementById('reg-keywords-value').value = selectedKeywords.join(',');
+            });
+            keywordWrap.appendChild(span);
+        });
+
+        // ===== 목록보기 필터 복원 =====
+        function fillFilterSelect(select, arr, firstLabel) {
+            select.innerHTML = "";
+            const o = document.createElement('option');
+            o.value = ""; o.textContent = firstLabel;
+            select.appendChild(o);
+            arr.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v; opt.textContent = v;
+                select.appendChild(opt);
+            });
+        }
+        fillFilterSelect(document.getElementById('list-type'), ["영화","드라마","예능"], "전체");
+        fillFilterSelect(document.getElementById('list-genre'), ["액션","코미디","드라마","로맨스/로맨틱 코미디","스릴러/범죄/미스터리","공포/호러","SF/판타지/슈퍼히어로","전쟁/역사/시대극","다큐멘터리","애니메이션/가족/어린이","음악/뮤지컬","스포츠","인디/예술영화","멜로/가족","사극/역사","판타지/SF/초자연","코미디/일상","청춘/학원","정치/사회/법정","스포츠/음악","시사/다큐 드라마","리얼리티/관찰 예능","버라이어티/코미디","게임/퀴즈/경쟁","여행/먹방/요리","토크쇼/인터뷰","음악/공연","스포츠/체험","교양/다큐형 예능"], "장르 전체");
+        fillFilterSelect(document.getElementById('list-category'), ["최신 개봉","인기작/박스오피스","평점 높은 작품","최신 방송","평점 높은 드라마","시즌별/연도별","평점 높은 예능"], "카테고리 전체");
+        fillFilterSelect(document.getElementById('list-ott'), OTTS, "OTT/방송사 전체");
+        fillFilterSelect(document.getElementById('list-sort'), ["최신순","오래된 순","평점순","댓글순"], "정렬");
+
+        // ===== 시청함 버튼 기능 (예시) =====
+        document.querySelectorAll('.watch-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                btn.classList.toggle('watched');
+                btn.textContent = btn.classList.contains('watched') ? "시청함" : "시청하기";
+                // 실제로는 localStorage, DB, 혹은 상태 관리로 마이페이지와 연동 처리 필요
+            });
+        });
+    });
+    </script>
+    <style>
+    /* 별점 시각화 스타일(필요시 style.css에 이동) */
+    .star { color: #f3c969; margin-right: 2px;}
+    .star.selected { color: #ffeebb; }
+    .tag.selected { background: #f3c969; color: #27304d; }
+    .watch-btn { background:#f3c969; color:#232a43; border-radius:8px; padding:6px 14px; cursor:pointer; border:none; font-weight:bold;}
+    .watch-btn.watched { background:#232a43; color:#ffeebb; border:2px solid #f3c969;}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>WatchPick</h1>
+        <nav class="navbar">
+            <a href="index.html">홈</a>
+            <a href="movie.html" class="active">영화·드라마·예능</a>
+            <a href="review.html">리뷰</a>
+            <a href="recommend.html">추천</a>
+            <a href="community.html">커뮤니티</a>
+            <a href="mypage.html">My Page</a>
+        </nav>
+        <hr>
+    </header>
+    <main>
+        <h2>영화·드라마·예능</h2>
+        <div class="tabs">
+            <button class="tab-btn active" type="button">등록하기</button>
+            <button class="tab-btn" type="button">목록보기</button>
+        </div>
+        <!-- 등록하기 -->
+        <section class="section-box" id="register-section">
+            <h3>작품 등록하기</h3>
+            <form>
+                <div class="form-row"><label>포스터 이미지</label><input type="file"></div>
+                <div class="form-row"><label>제목</label><input type="text" placeholder="작품 제목"></div>
+                <div class="form-row">
+                    <label>구분</label>
+                    <select id="reg-type"><option value="영화">영화</option><option value="드라마">드라마</option><option value="예능">예능</option></select>
+                </div>
+                <div class="form-row">
+                    <label>장르</label>
+                    <select id="reg-genre"></select>
+                    <label>카테고리</label>
+                    <select id="reg-category"></select>
+                </div>
+                <div class="form-row">
+                    <label>제작국가</label>
+                    <select id="reg-country"></select>
+                    <label>언어</label>
+                    <select id="reg-language"></select>
+                </div>
+                <div class="form-row">
+                    <label>OTT/방송사</label>
+                    <select id="reg-ott"></select>
+                </div>
+                <div class="form-row">
+                    <label>공개일</label>
+                    <input type="date">
+                    <label>러닝타임(분)</label>
+                    <input type="number" min="0">
+                </div>
+                <div class="form-row">
+                    <label>에피소드 수</label>
+                    <input type="number" min="1" placeholder="에피소드">
+                </div>
+                <div class="form-row">
+                    <label>출연진</label>
+                    <div style="flex:1;">
+                        <div id="cast-list"></div>
+                        <button type="button" id="add-cast-btn" class="btn" style="margin-top:8px;">출연진 추가</button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>감독</label>
+                    <input type="text">
+                    <label>작가</label>
+                    <input type="text">
+                </div>
+                <div class="form-row">
+                    <label>제작사</label>
+                    <select id="reg-ott"></select>
+                </div>
+                <div class="form-row">
+                    <label>줄거리</label>
+                    <textarea placeholder="줄거리"></textarea>
+                </div>
+                <div class="form-row">
+                    <label>배너 이미지</label>
+                    <input type="file">
+                </div>
+                <div class="form-row">
+                    <label>평점</label>
+                    <div id="star-rating"></div>
+                    <input type="hidden" id="reg-rating-value" name="rating" value="0">
+                </div>
+                <div class="form-row">
+                    <label>키워드</label>
+                    <div id="reg-keywords" class="tag-list"></div>
+                    <input type="hidden" id="reg-keywords-value" name="keywords">
+                </div>
+                <button type="submit">등록하기</button>
+            </form>
+        </section>
+        <!-- 목록보기 -->
+        <section class="section-box" id="list-section">
+            <h3>작품 목록</h3>
+            <form class="form-row" style="gap:10px;">
+                <select id="list-type"></select>
+                <select id="list-genre"></select>
+                <select id="list-category"></select>
+                <select id="list-ott"></select>
+                <select id="list-sort"></select>
+                <button type="submit" class="btn">정렬/필터</button>
+            </form>
+            <div class="movie-list">
+                <!-- 예시 카드 -->
+                <div class="movie-card">
+                    <img src="https://via.placeholder.com/90x120.png?text=포스터" alt="포스터">
+                    <div class="info">
+                        <h3>예시 영화/드라마/예능 제목</h3>
+                        <div class="meta">
+                            장르: 드라마 | 카테고리: 인기 | OTT: 넷플릭스 | 평점: <span style="color:#f3c969;">★★★★☆</span>
+                        </div>
+                        <div>간단한 줄거리 또는 정보 요약</div>
+                        <button type="button" class="watch-btn">시청하기</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <hr>
+        <p>&copy; 2025 WatchPick</p>
+    </footer>
+</body>
+</html>

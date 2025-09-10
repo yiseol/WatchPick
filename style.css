@@ -1,0 +1,212 @@
+body {
+  font-family: 'Nanum Myeongjo', 'Apple SD Gothic Neo', 'Malgun Gothic', serif;
+  background: #192136;
+  margin: 0;
+  padding: 0;
+  color: #ffeebb;
+}
+
+header {
+  background: #27304d;
+  color: #ffeebb;
+  padding: 34px 0 16px 0;
+  text-align: center;
+  box-shadow: 0 2px 12px #0e1321aa;
+  border-bottom: 3px solid #f3c969;
+}
+
+header h1 {
+  margin: 0 0 8px 0;
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: 2.6em;
+  letter-spacing: 1.5px;
+}
+
+.navbar {
+  margin-top: 16px;
+}
+
+.navbar a {
+  color: #f3c969;
+  text-decoration: none;
+  background: #27304d;
+  margin: 0 7px;
+  padding: 10px 22px;
+  border-radius: 18px;
+  font-weight: bold;
+  font-size: 1.07em;
+  transition: background 0.18s, color 0.18s;
+  border-bottom: 2.5px solid #f3c969;
+  font-family: 'Nanum Myeongjo', serif;
+}
+
+.navbar a:hover, .navbar a.active {
+  background: #f3c969;
+  color: #27304d;
+}
+
+main {
+  max-width: 900px;
+  margin: 45px auto 0 auto;
+  background: #232a43;
+  border-radius: 22px;
+  box-shadow: 0 4px 25px #0e1321aa;
+  padding: 38px 30px 32px 30px;
+  border: 2px solid #f3c969;
+}
+
+h2 {
+  color: #f3c969;
+  border-bottom: 2px dashed #ffeebb;
+  padding-bottom: 8px;
+  margin-bottom: 18px;
+  font-family: 'Nanum Myeongjo', serif;
+}
+
+.tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.tab-btn {
+  background: #27304d;
+  color: #f3c969;
+  border: none;
+  border-radius: 15px 15px 0 0;
+  padding: 12px 38px;
+  font-size: 1.05em;
+  font-family: 'Nanum Myeongjo', serif;
+  cursor: pointer;
+  outline: none;
+  font-weight: bold;
+  border-bottom: 3px solid transparent;
+  transition: background 0.18s, color 0.18s, border 0.18s;
+}
+
+.tab-btn.active, .tab-btn:hover {
+  background: #f3c969;
+  color: #27304d;
+  border-bottom: 3px solid #232a43;
+}
+
+.section-box {
+  margin-bottom: 40px;
+  background: #21263a;
+  border-radius: 12px;
+  padding: 28px 22px 18px 22px;
+  box-shadow: 0 2px 8px #0002;
+  border: 1.5px solid #f3c96930;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.form-row label {
+  min-width: 110px;
+  color: #ffeebb;
+  font-weight: 600;
+}
+
+input[type="text"], input[type="number"], select, textarea {
+  border-radius: 8px;
+  border: none;
+  padding: 8px 13px;
+  font-size: 1em;
+  font-family: inherit;
+  background: #fffbe6;
+  color: #232a43;
+  margin-right: 10px;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+button, .btn {
+  background: #f3c969;
+  color: #232a43;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 1.04em;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+
+button:hover, .btn:hover {
+  background: #ffeebb;
+  color: #27304d;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.tag {
+  background: #27304d;
+  color: #f3c969;
+  border-radius: 18px;
+  padding: 6px 16px;
+  font-size: 0.98em;
+  cursor: pointer;
+  user-select: none;
+  border: 1.5px solid #f3c969;
+  transition: background 0.18s, color 0.18s;
+}
+
+.tag.selected {
+  background: #f3c969;
+  color: #27304d;
+}
+
+.movie-list {
+  margin-top: 18px;
+}
+
+.movie-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  background: #242945;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 1px solid #f3c96930;
+  box-shadow: 0 0 10px #0002;
+}
+
+.movie-card img {
+  width: 90px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1.5px solid #ffeebb55;
+  background: #fffbe6;
+}
+
+.movie-card .info {
+  flex: 1;
+}
+
+.movie-card .info h3 {
+  color: #f3c969;
+  margin: 0 0 6px 0;
+}
+
+.movie-card .info .meta {
+  color: #ffeebb;
+  font-size: 0.97em;
+  margin-bottom: 8px;
+}
