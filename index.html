@@ -5,62 +5,79 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>WatchPick - 영화관 스타일 미디어 추천</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- 색상 가이드 및 주/야간 미리보기 -->
-  <div class="color-guide">
-    <h2>🎬 WatchPick 색상 가이드 & 미리보기</h2>
-    <div class="mode-switch">
-      <button id="modeDay">주간 모드</button>
-      <button id="modeNight">야간 모드</button>
-    </div>
-    <div class="color-palette">
-      <div>
-        <span class="swatch main"></span>
-        <span>Main</span>
-        <span class="var-name">var(--main-bg)</span>
+  <!-- 영화관 네비게이션 -->
+  <header>
+    <nav class="cinema-navbar">
+      <span class="logo"><span class="logo-icon">🎬</span> WatchPick</span>
+      <div class="menu">
+        <a href="index.html">홈</a>
+        <a href="movie.html">영화·드라마·예능</a>
+        <a href="review.html">리뷰</a>
+        <a href="recommend.html">추천</a>
+        <a href="community.html">커뮤니티</a>
+        <a href="mypage.html">My Page</a>
       </div>
-      <div>
-        <span class="swatch point1"></span>
-        <span>Point1</span>
-        <span class="var-name">var(--point1)</span>
+      <div class="theme-switch">
+        <button id="modeDay" title="주간 모드">🌞</button>
+        <button id="modeNight" title="야간 모드">🌙</button>
       </div>
-      <div>
-        <span class="swatch point2"></span>
-        <span>Point2</span>
-        <span class="var-name">var(--point2)</span>
-      </div>
-      <div>
-        <span class="swatch point3"></span>
-        <span>Point3</span>
-        <span class="var-name">var(--point3)</span>
-      </div>
-    </div>
-    <p>아래 “주간/야간” 버튼을 클릭하면 실제 사이트 색상 테마가 전환됩니다.</p>
-  </div>
-  <script>
-    // 주야간 모드 전환 스크립트
-    document.getElementById('modeDay').onclick = function() {
-      document.documentElement.setAttribute('data-theme', 'day');
-    };
-    document.getElementById('modeNight').onclick = function() {
-      document.documentElement.setAttribute('data-theme', 'night');
-    };
-  </script>
-  
-  <!-- 실제 사이트의 네비게이션 예시 -->
-  <nav class="navbar">
-    <a href="index.html">홈</a>
-    <a href="movie.html">영화·드라마·예능</a>
-    <a href="review.html">리뷰</a>
-    <a href="recommend.html">추천</a>
-    <a href="community.html">커뮤니티</a>
-    <a href="mypage.html">My Page</a>
-  </nav>
+    </nav>
+  </header>
+
   <main>
-    <h1>WatchPick에 오신 것을 환영합니다!</h1>
-    <p>영화관 스타일의 미디어 추천 웹사이트입니다.<br>
-      상단 메뉴에서 영화, 리뷰, 추천, 커뮤니티, 마이페이지 등 다양한 기능을 이용해보세요.</p>
+    <section class="hero">
+      <div class="curtain"></div>
+      <h1>🎟️ WatchPick에 오신 걸 환영합니다!</h1>
+      <p class="lead">영화관처럼 고급스럽고 세련된 미디어 추천 웹사이트.<br>
+      원하는 영화를 <span class="highlight-gold">찾고</span>, <span class="highlight-red">리뷰</span>를 남기고, <span class="highlight-blue">커뮤니티</span>에서 소통해보세요.</p>
+    </section>
+
+    <section class="card-row">
+      <div class="movie-card">
+        <div class="card-banner"></div>
+        <h2>최신 영화 추천</h2>
+        <p>트렌디한 영화와 드라마를 한눈에!<br>벨벳 시트, 황금빛 조명처럼 고급스럽게 즐겨보세요.</p>
+        <a class="card-btn" href="movie.html">영화·드라마·예능</a>
+      </div>
+      <div class="movie-card">
+        <div class="card-banner"></div>
+        <h2>리뷰 & 평점</h2>
+        <p>관람 후기를 남기고, 다른 유저의 리뷰도 확인!<br>별점, 코멘트, 영화관처럼 생생하게.</p>
+        <a class="card-btn" href="review.html">리뷰</a>
+      </div>
+      <div class="movie-card">
+        <div class="card-banner"></div>
+        <h2>커뮤니티</h2>
+        <p>영화 토론, 추천, 자유 게시판까지!<br>같은 취향의 친구들과 소통하세요.</p>
+        <a class="card-btn" href="community.html">커뮤니티</a>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-inner">
+        <span>© 2025 WatchPick | Designed with 🎬 by yiseol</span>
+      </div>
+    </footer>
   </main>
+
+  <script>
+    // 주야간 모드 전환
+    const setTheme = (theme) => {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('watchpick-theme', theme);
+    }
+    document.getElementById('modeDay').onclick = () => setTheme('day');
+    document.getElementById('modeNight').onclick = () => setTheme('night');
+    // 페이지 로드시 이전 선택 반영
+    (() => {
+      const theme = localStorage.getItem('watchpick-theme');
+      if (theme) setTheme(theme);
+    })();
+  </script>
 </body>
 </html>
